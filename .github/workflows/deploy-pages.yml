@@ -8,9 +8,9 @@ name: Deploy GitHub Pages
 # Build and deployment -> Source -> "GitHub Actions" (replacing "Deploy
 # from a branch"). See README.md "Deploying".
 
+# Backup mirror: this copy is served by "Deploy from a branch", so this
+# workflow only runs if started by hand from the Actions tab.
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
 
 # Only one deployment at a time; let an in-flight run finish rather than
