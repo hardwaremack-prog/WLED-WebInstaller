@@ -543,7 +543,19 @@
 
   /** Rewrite a GitHub release asset URL to WLED's CORS-enabled download mirror. */
   function mirrorUrl(githubUrl) {
-    return DOWNLOAD_MIRROR + new URL(githubUrl).pathname;
+    // Backup mirror: if this release's firmware was copied into backup/firmware/
+    // (see .github/workflows/backup-firmware.yml), serve it from this site
+    // instead of download.wled.me so installs keep working if WLED's servers go away.
+    const path = new URL(githubUrl).pathname; // /wled/WLED/releases/download/<tag>/<file>
+    const m = path.match(/\/releases\/download\/([^/]+)\/([^/]+)$/);
+    const backup = window.WLED_BACKUP || {};
+    if (m) {
+      const tag = decodeURIComponent(m[1]), file = decodeURIComponent(m[2]);
+      if (backup[tag] && backup[tag].indexOf(file) !== -1) {
+        return new URL('backup/firmware/' + encodeURIComponent(tag) + '/' + encodeURIComponent(file), window.location.href).href;
+      }
+    }
+    return DOWNLOAD_MIRROR + path;
   }
 
   /** Extract the WLED version string from asset filenames (for nightly). */
@@ -1310,6 +1322,14 @@
         .then(function (releases) {
           cacheReleases(releases);
           return releases;
+        })
+        .catch(function (err) {
+          // Backup mirror: fall back to the release list saved alongside the firmware.
+          console.warn('GitHub API unavailable, using backed-up release list.', err);
+          return fetch('backup/releases.json').then(function (res) {
+            if (!res.ok) throw new Error('Backup release list responded with ' + res.status);
+            return res.json();
+          });
         });
 
     releasesPromise
