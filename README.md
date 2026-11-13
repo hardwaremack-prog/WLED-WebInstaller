@@ -1,4 +1,22 @@
-# WLED Web Installer
+# WLED Web Installer — Backup Mirror
+
+## ⚡ [Open the Web Flasher](https://hardwaremack-prog.github.io/WLED-WebInstaller/)
+
+**https://hardwaremack-prog.github.io/WLED-WebInstaller/**
+
+Plug your ESP32 / ESP8266 into USB, open the link above in **Chrome or Edge** (needs Web Serial), pick a version and hit **Install**.
+
+This is a backup copy of the official installer at [install.wled.me](https://install.wled.me/), so it stays available even if that site goes down. Every published WLED release's firmware (v0.5.0 → latest) is saved in [`backup/firmware/`](backup/firmware/) and the flasher uses those copies first. A weekly GitHub Action ([Back up WLED firmware](.github/workflows/backup-firmware.yml)) adds new releases automatically. Nightly builds still come from WLED's servers.
+
+| Basic mode | Advanced mode |
+|---|---|
+| ![WLED web flasher, basic mode](screenshots/installer-basic.png) | ![WLED web flasher, advanced mode with flash size, memory and flash mode options](screenshots/installer-advanced.png) |
+
+Original project: [wled/WLED-WebInstaller](https://github.com/wled/WLED-WebInstaller) by Christian Schwinne and WLED contributors, Apache-2.0 licensed.
+
+---
+
+## About the installer
 
 A static, GitHub-Pages-friendly web installer for [WLED](https://github.com/wled/WLED), built on
 [ESP Web Tools](https://esphome.github.io/esp-web-tools/).
